@@ -126,9 +126,28 @@ public class AirCheck extends AppCompatActivity {
 
                 // Check gas concentration and show notification if needed
                 try {
+                    // Gas alert
                     double gasValue = Double.parseDouble(data.gas);
                     if (gasValue > 1.5) {
-                        showGasAlertNotification();
+                        showAlertNotification("High gas concentration detected!", "Gas Alert");
+                    }
+
+                    //Co2 alert
+                    String cleanCO2 = data.co2.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanCO2.isEmpty()) {
+                        int co2Value = (int)Double.parseDouble(cleanCO2); // Handle decimal values if any
+                        if (co2Value > 2000) {
+                            showAlertNotification("High CO2 level detected: " + co2Value + "ppm", "CO2 Alert");
+                        }
+                    }
+
+                    //Dust PM2.5 alert
+                    String cleanDust = data.dust.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanDust.isEmpty()) {
+                        int pm25Value = (int)Double.parseDouble(cleanDust); // Handle decimal values if any
+                        if (pm25Value > 200) {
+                            showAlertNotification("High PM2.5 Dust level detected: " + pm25Value + "µg/m³", "Dust Alert");
+                        }
                     }
                 } catch (NumberFormatException e) {
                     // Handle case where gas value couldn't be parsed
@@ -154,31 +173,31 @@ public class AirCheck extends AppCompatActivity {
         }
     }
 
-    private void showGasAlertNotification() {
-        // Check if we have notification permission
+    private void showAlertNotification(String message, String title) {
+        // Check permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Request the permission if we don't have it
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE
-                );
+            // Only request if we haven't already asked
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                Toast.makeText(this, "Enable notifications for alerts", Toast.LENGTH_LONG).show();
             }
+
+            // Don't return - just skip notification this time
             return;
         }
 
-        // Create and show the notification if we have permission
+        // Create notification with unique ID
+        int notificationId = (int)System.currentTimeMillis(); // Unique ID
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_warning_notification)
-                .setContentTitle("Air Quality Alert")
-                .setContentText("High gas concentration detected!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH) // Increased priority
+                .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        NotificationManagerCompat.from(this).notify(notificationId, builder.build());
     }
 
     @Override
@@ -186,13 +205,11 @@ public class AirCheck extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-            // If request is cancelled, the result arrays are empty
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted, show the notification
-                showGasAlertNotification();
+                // Permission was granted, re-check conditions
+                fetchAirQualityData();
             } else {
-                // Permission denied - you might want to show a message to the user
-                Toast.makeText(this, "Notification permission is needed for gas alerts", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Notification permission is needed for alerts", Toast.LENGTH_SHORT).show();
             }
         }
     }
