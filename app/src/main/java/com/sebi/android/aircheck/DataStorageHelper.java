@@ -13,34 +13,45 @@ public class DataStorageHelper {
     private static final String PM25_KEY = "pm25_data";
     private static final String TEMP_KEY = "temp_data";
     private static final String HUMIDITY_KEY = "humidity_data";
+    private static final String CO2_TIMESTAMPS = "co2_timestamps";
+    private static final String PM25_TIMESTAMPS = "pm25_timestamps";
+    private static final String TEMP_TIMESTAMPS = "temp_timestamps";
+    private static final String HUMIDITY_TIMESTAMPS = "humidity_timestamps";
     private static final int MAX_DATA_POINTS = 50;
 
     public static void saveData(Context context, String type, float value) throws JSONException {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
+        // Save value data
         String key = getKeyForType(type);
         List<Float> data = loadDataList(context, key);
-
-        // Add new value and maintain only the last MAX_DATA_POINTS values
         data.add(value);
         while (data.size() > MAX_DATA_POINTS) {
             data.remove(0);
         }
+        editor.putString(key, convertListToJson(data));
 
-        // Convert to JSON manually
-        JSONArray jsonArray = new JSONArray();
-        for (float val : data) {
-            jsonArray.put((double)val);  // Convert float to double before putting
+        // Save timestamp
+        String timestampKey = getTimestampKeyForType(type);
+        List<Long> timestamps = loadTimestampsList(context, timestampKey);
+        timestamps.add(System.currentTimeMillis());
+        while (timestamps.size() > MAX_DATA_POINTS) {
+            timestamps.remove(0);
         }
+        editor.putString(timestampKey, convertTimestampsToJson(timestamps));
 
-        editor.putString(key, jsonArray.toString());
         editor.apply();
     }
 
     public static List<Float> loadData(Context context, String type) {
         String key = getKeyForType(type);
         return loadDataList(context, key);
+    }
+
+    public static List<Long> loadTimestamps(Context context, String type) {
+        String timestampKey = getTimestampKeyForType(type);
+        return loadTimestampsList(context, timestampKey);
     }
 
     private static List<Float> loadDataList(Context context, String key) {
@@ -55,7 +66,6 @@ public class DataStorageHelper {
             JSONArray jsonArray = new JSONArray(json);
             List<Float> data = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
-                // Get as double and cast to float
                 data.add((float)jsonArray.getDouble(i));
             }
             return data;
@@ -65,12 +75,59 @@ public class DataStorageHelper {
         }
     }
 
+    private static List<Long> loadTimestampsList(Context context, String key) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String json = prefs.getString(key, "");
+
+        if (json.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            List<Long> timestamps = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                timestamps.add(jsonArray.getLong(i));
+            }
+            return timestamps;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    private static String convertListToJson(List<Float> list) throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        for (float val : list) {
+            jsonArray.put((double)val);
+        }
+        return jsonArray.toString();
+    }
+
+    private static String convertTimestampsToJson(List<Long> list) throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        for (long val : list) {
+            jsonArray.put(val);
+        }
+        return jsonArray.toString();
+    }
+
     private static String getKeyForType(String type) {
         switch (type) {
             case "co2": return CO2_KEY;
             case "pm25": return PM25_KEY;
             case "temp": return TEMP_KEY;
             case "humidity": return HUMIDITY_KEY;
+            default: return "";
+        }
+    }
+
+    private static String getTimestampKeyForType(String type) {
+        switch (type) {
+            case "co2": return CO2_TIMESTAMPS;
+            case "pm25": return PM25_TIMESTAMPS;
+            case "temp": return TEMP_TIMESTAMPS;
+            case "humidity": return HUMIDITY_TIMESTAMPS;
             default: return "";
         }
     }

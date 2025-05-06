@@ -15,11 +15,24 @@
         android:contentDescription="Back"
         app:tint="@android:color/white" />
 
+    <TextView
+        android:id="@+id/chartTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btnBack"
+        android:layout_marginTop="8dp"
+        android:text="Chart Title"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btnBack"
+        android:layout_below="@id/chartTitle"
         android:layout_marginTop="24dp"
         />
 

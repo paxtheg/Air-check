@@ -1,5 +1,6 @@
 package com.sebi.android.aircheck;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -14,6 +15,17 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
+import android.text.format.DateFormat;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +35,7 @@ public abstract class ChartActivity extends AppCompatActivity {
     protected String chartTitle;
     protected String valueSuffix;
     protected int color;
+    private List<Date> dataTimestamps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +43,9 @@ public abstract class ChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chart);
 
         chart = findViewById(R.id.chart);
+
+        TextView titleTextView = findViewById(R.id.chartTitle);
+        titleTextView.setText(chartTitle);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
@@ -73,13 +89,43 @@ public abstract class ChartActivity extends AppCompatActivity {
         leftAxis.setGridColor(Color.parseColor("#888888"));
         xAxis.setGridColor(Color.parseColor("#888888"));
 
+        SimpleMarkerView mv = new SimpleMarkerView(this, R.layout.simple_marker_view);
+        mv.setChartView(chart);
+        chart.setMarker(mv);
+
         chart.setBackgroundColor(Color.BLACK);
         chart.getAxisRight().setEnabled(false);
     }
 
+    private class SimpleMarkerView extends MarkerView {
+        private TextView tvValue;
+
+        public SimpleMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+            tvValue = findViewById(R.id.tvValue);
+        }
+
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            tvValue.setText(String.format(Locale.getDefault(), "%.1f %s", e.getY(), valueSuffix));
+            super.refreshContent(e, highlight);
+        }
+
+        @Override
+        public MPPointF getOffset() {
+            return new MPPointF(-(getWidth() / 2), -getHeight());
+        }
+    }
+
+
     protected void updateChart() {
         List<Float> dataValues = DataStorageHelper.loadData(this, dataType);
+        List<Long> timestamps = DataStorageHelper.loadTimestamps(this, dataType);
         List<Entry> entries = new ArrayList<>();
+
+        for (Long timestamp : timestamps) {
+            dataTimestamps.add(new Date(timestamp));
+        }
 
         for (int i = 0; i < dataValues.size(); i++) {
             entries.add(new Entry(i, dataValues.get(i)));
