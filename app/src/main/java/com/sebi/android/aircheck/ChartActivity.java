@@ -2,6 +2,8 @@ package com.sebi.android.aircheck;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -10,6 +12,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.Description;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +30,13 @@ public abstract class ChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chart);
 
         chart = findViewById(R.id.chart);
+
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        });
+
         setupChart();
         updateChart();
     }
@@ -40,17 +51,29 @@ public abstract class ChartActivity extends AppCompatActivity {
         chart.setPinchZoom(true);
         chart.setDrawGridBackground(false);
 
-        // X-axis configuration
+        int textColor = Color.WHITE;
+
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
+        xAxis.setTextColor(textColor);
 
-        // Y-axis configuration
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setDrawGridLines(true);
         leftAxis.setAxisMinimum(0f);
+        leftAxis.setTextColor(textColor);
 
+        Legend legend = chart.getLegend();
+        legend.setTextColor(textColor);
+
+        Description description = chart.getDescription();
+        description.setTextColor(textColor);
+
+        leftAxis.setGridColor(Color.parseColor("#888888"));
+        xAxis.setGridColor(Color.parseColor("#888888"));
+
+        chart.setBackgroundColor(Color.BLACK);
         chart.getAxisRight().setEnabled(false);
     }
 
