@@ -1,20 +1,20 @@
 package com.sebi.android.aircheck;
 
-
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -22,9 +22,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
 import java.io.IOException;
 
 public class AirCheck extends AppCompatActivity {
@@ -44,7 +44,6 @@ public class AirCheck extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_air_check);
 
-        // Initialize views
         co2TextView = findViewById(R.id.co2TextView);
         tempTextView = findViewById(R.id.tempTextView);
         humidityTextView = findViewById(R.id.humidityTextView);
@@ -52,13 +51,40 @@ public class AirCheck extends AppCompatActivity {
         gasTextView = findViewById(R.id.gasTextView);
         progressBar = findViewById(R.id.progressBar);
 
-        // Create notification channel
+        Button btnCo2 = findViewById(R.id.btnCo2);
+        Button btnPm25 = findViewById(R.id.btnPm25);
+        Button btnTemp = findViewById(R.id.btnTemp);
+        Button btnHumidity = findViewById(R.id.btnHumidity);
+
+        btnCo2.setOnClickListener(v -> navigateToChart("co2"));
+        btnPm25.setOnClickListener(v -> navigateToChart("pm25"));
+        btnTemp.setOnClickListener(v -> navigateToChart("temp"));
+        btnHumidity.setOnClickListener(v -> navigateToChart("humidity"));
+
         createNotificationChannel();
-
-        // Fetch data when activity starts
         fetchAirQualityData();
-
         setupAutoRefresh();
+    }
+
+    private void navigateToChart(String dataType) {
+        Intent intent;
+        switch (dataType) {
+            case "co2":
+                intent = new Intent(this, CO2DataActivity.class);
+                break;
+            case "pm25":
+                intent = new Intent(this, PM25DataActivity.class);
+                break;
+            case "temp":
+                intent = new Intent(this, TemperatureDataActivity.class);
+                break;
+            case "humidity":
+                intent = new Intent(this, HumidityDataActivity.class);
+                break;
+            default:
+                return;
+        }
+        startActivity(intent);
     }
 
     private void fetchAirQualityData() {
@@ -126,31 +152,46 @@ public class AirCheck extends AppCompatActivity {
 
                 // Check gas concentration and show notification if needed
                 try {
-                    // Gas alert
-                    double gasValue = Double.parseDouble(data.gas);
+                    // CO2 Data
+                    String cleanCO2 = data.co2.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanCO2.isEmpty()) {
+                        float co2Value = Float.parseFloat(cleanCO2);
+                        DataStorageHelper.saveData(AirCheck.this, "co2", co2Value);
+                        if (co2Value > 2000) {
+                            showAlertNotification("High CO2 level detected: " + (int)co2Value + "ppm", "CO2 Alert");
+                        }
+                    }
+
+                    // PM2.5 Data
+                    String cleanDust = data.dust.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanDust.isEmpty()) {
+                        float pm25Value = Float.parseFloat(cleanDust);
+                        DataStorageHelper.saveData(AirCheck.this, "pm25", pm25Value);
+                        if (pm25Value > 300) {
+                            showAlertNotification("High PM2.5 level detected: " + (int)pm25Value + "µg/m³", "Dust Alert");
+                        }
+                    }
+
+                    // Temperature Data
+                    String cleanTemp = data.temperature.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanTemp.isEmpty()) {
+                        float tempValue = Float.parseFloat(cleanTemp);
+                        DataStorageHelper.saveData(AirCheck.this, "temp", tempValue);
+                    }
+
+                    // Humidity Data
+                    String cleanHumidity = data.humidity.replaceAll("[^0-9.]", "").trim();
+                    if (!cleanHumidity.isEmpty()) {
+                        float humidityValue = Float.parseFloat(cleanHumidity);
+                        DataStorageHelper.saveData(AirCheck.this, "humidity", humidityValue);
+                    }
+
+                    // Gas Alert
+                    float gasValue = Float.parseFloat(data.gas);
                     if (gasValue > 1.5) {
                         showAlertNotification("High gas concentration detected!", "Gas Alert");
                     }
-
-                    //Co2 alert
-                    String cleanCO2 = data.co2.replaceAll("[^0-9.]", "").trim();
-                    if (!cleanCO2.isEmpty()) {
-                        int co2Value = (int)Double.parseDouble(cleanCO2); // Handle decimal values if any
-                        if (co2Value > 2000) {
-                            showAlertNotification("High CO2 level detected: " + co2Value + "ppm", "CO2 Alert");
-                        }
-                    }
-
-                    //Dust PM2.5 alert
-                    String cleanDust = data.dust.replaceAll("[^0-9.]", "").trim();
-                    if (!cleanDust.isEmpty()) {
-                        int pm25Value = (int)Double.parseDouble(cleanDust); // Handle decimal values if any
-                        if (pm25Value > 200) {
-                            showAlertNotification("High PM2.5 Dust level detected: " + pm25Value + "µg/m³", "Dust Alert");
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    // Handle case where gas value couldn't be parsed
+                } catch (NumberFormatException | JSONException e) {
                     e.printStackTrace();
                 }
 
