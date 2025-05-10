@@ -7,7 +7,7 @@ public class HumidityDataActivity extends ChartActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         dataType = "humidity";
-        chartTitle = "Humidity Over Time";
+        chartTitle = "Humidity over the last 25 minutes";
         valueSuffix = "%";
         color = Color.MAGENTA;
         super.onCreate(savedInstanceState);

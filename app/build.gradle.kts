@@ -43,5 +43,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("org.jsoup:jsoup:1.15.3")
     implementation (libs.mpandroidchart)
+    //implementation (androidx.core:core-splashscreen:1.0.0)
 
 }

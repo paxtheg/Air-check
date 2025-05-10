@@ -35,7 +35,6 @@ public class AirCheck extends AppCompatActivity {
     private Handler refreshHandler;
     private Runnable refreshRunnable;
     private static final String CHANNEL_ID = "air_quality_channel";
-    private static final int NOTIFICATION_ID = 1;
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
 
 
@@ -157,7 +156,7 @@ public class AirCheck extends AppCompatActivity {
                     if (!cleanCO2.isEmpty()) {
                         float co2Value = Float.parseFloat(cleanCO2);
                         DataStorageHelper.saveData(AirCheck.this, "co2", co2Value);
-                        if (co2Value > 2000) {
+                        if (co2Value > 1500) {
                             showAlertNotification("High CO2 level detected: " + (int)co2Value + "ppm", "CO2 Alert");
                         }
                     }

@@ -15,7 +15,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Air Quality Monitor"
+            android:text="AirCheck Air Quality Monitor"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +93,8 @@
                 android:id="@+id/btnCo2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_blue"
+                android:textColor="@android:color/white"
                 android:layout_margin="4dp"
                 android:text="View CO2 Data" />
 
@@ -100,6 +102,8 @@
                 android:id="@+id/btnPm25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_blue"
+                android:textColor="@android:color/white"
                 android:layout_margin="4dp"
                 android:text="View PM2.5 Data" />
 
@@ -107,6 +111,8 @@
                 android:id="@+id/btnTemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_blue"
+                android:textColor="@android:color/white"
                 android:layout_margin="4dp"
                 android:text="View Temperature Data" />
 
@@ -114,6 +120,8 @@
                 android:id="@+id/btnHumidity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_blue"
+                android:textColor="@android:color/white"
                 android:layout_margin="4dp"
                 android:text="View Humidity Data" />
         </LinearLayout>

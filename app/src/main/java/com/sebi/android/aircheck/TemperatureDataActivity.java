@@ -7,7 +7,7 @@ public class TemperatureDataActivity extends ChartActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         dataType = "temp";
-        chartTitle = "Temperature Over Time";
+        chartTitle = "Temperature over the last 25 minutes";
         valueSuffix = "°C";
         color = Color.GREEN;
         super.onCreate(savedInstanceState);

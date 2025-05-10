@@ -16,16 +16,11 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
-import android.text.format.DateFormat;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +30,6 @@ public abstract class ChartActivity extends AppCompatActivity {
     protected String chartTitle;
     protected String valueSuffix;
     protected int color;
-    private List<Date> dataTimestamps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +114,7 @@ public abstract class ChartActivity extends AppCompatActivity {
 
     protected void updateChart() {
         List<Float> dataValues = DataStorageHelper.loadData(this, dataType);
-        List<Long> timestamps = DataStorageHelper.loadTimestamps(this, dataType);
         List<Entry> entries = new ArrayList<>();
-
-        for (Long timestamp : timestamps) {
-            dataTimestamps.add(new Date(timestamp));
-        }
 
         for (int i = 0; i < dataValues.size(); i++) {
             entries.add(new Entry(i, dataValues.get(i)));
