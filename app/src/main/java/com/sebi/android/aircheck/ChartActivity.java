@@ -87,7 +87,7 @@ public abstract class ChartActivity extends AppCompatActivity {
         mv.setChartView(chart);
         chart.setMarker(mv);
 
-        chart.setBackgroundColor(Color.BLACK);
+        chart.setBackgroundColor(Color.TRANSPARENT);
         chart.getAxisRight().setEnabled(false);
     }
 
@@ -123,13 +123,13 @@ public abstract class ChartActivity extends AppCompatActivity {
         if (!entries.isEmpty()) {
             LineDataSet dataSet = new LineDataSet(entries, chartTitle);
             dataSet.setColor(color);
-            dataSet.setValueTextColor(Color.BLACK);
+            dataSet.setValueTextColor(Color.WHITE);
             dataSet.setLineWidth(2f);
             dataSet.setCircleColor(color);
             dataSet.setCircleRadius(4f);
             dataSet.setValueTextSize(10f);
+            dataSet.setDrawValues(false);
 
-            // Create a proper ValueFormatter
             dataSet.setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {

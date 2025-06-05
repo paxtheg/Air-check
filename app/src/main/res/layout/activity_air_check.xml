@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,9 +16,11 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="54dp"
             android:text="AirCheck Air Quality Monitor"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,9 +30,10 @@
             android:id="@+id/co2TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="72dp"
             android:text="CO2: -- ppm"
             android:textSize="18sp"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleTextView" />
@@ -41,6 +45,7 @@
             android:layout_marginTop="16dp"
             android:text="Temperature: -- °C"
             android:textSize="18sp"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/co2TextView" />
@@ -52,6 +57,7 @@
             android:layout_marginTop="16dp"
             android:text="Humidity: -- %"
             android:textSize="18sp"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tempTextView" />
@@ -63,6 +69,7 @@
             android:layout_marginTop="16dp"
             android:text="PM2.5 (Dust): -- µg/m³"
             android:textSize="18sp"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/humidityTextView" />
@@ -74,6 +81,7 @@
             android:layout_marginTop="16dp"
             android:text="Gas Sensor Voltage: --"
             android:textSize="18sp"
+            android:textColor="#FF0F4D81"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dustTextView" />
@@ -82,7 +90,7 @@
             android:id="@+id/buttonLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="56dp"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@id/gasTextView"
@@ -91,7 +99,7 @@
 
             <Button
                 android:id="@+id/btnCo2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button_blue"
                 android:textColor="@android:color/white"
@@ -100,7 +108,7 @@
 
             <Button
                 android:id="@+id/btnPm25"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button_blue"
                 android:textColor="@android:color/white"
@@ -109,7 +117,7 @@
 
             <Button
                 android:id="@+id/btnTemp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button_blue"
                 android:textColor="@android:color/white"
@@ -118,7 +126,7 @@
 
             <Button
                 android:id="@+id/btnHumidity"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button_blue"
                 android:textColor="@android:color/white"

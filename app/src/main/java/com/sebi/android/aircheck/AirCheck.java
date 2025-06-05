@@ -151,7 +151,7 @@ public class AirCheck extends AppCompatActivity {
 
                 // Check gas concentration and show notification if needed
                 try {
-                    // CO2 Data
+                    // CO2 Alert
                     String cleanCO2 = data.co2.replaceAll("[^0-9.]", "").trim();
                     if (!cleanCO2.isEmpty()) {
                         float co2Value = Float.parseFloat(cleanCO2);
@@ -161,7 +161,7 @@ public class AirCheck extends AppCompatActivity {
                         }
                     }
 
-                    // PM2.5 Data
+                    // PM2.5 Alert
                     String cleanDust = data.dust.replaceAll("[^0-9.]", "").trim();
                     if (!cleanDust.isEmpty()) {
                         float pm25Value = Float.parseFloat(cleanDust);
@@ -188,8 +188,12 @@ public class AirCheck extends AppCompatActivity {
                     // Gas Alert
                     float gasValue = Float.parseFloat(data.gas);
                     if (gasValue > 1.5) {
-                        showAlertNotification("High gas concentration detected!", "Gas Alert");
+                        showAlertNotification("Gas concentration has reached a toxic level!", "Gas Alert");
                     }
+                    if (gasValue > 1.3) {
+                        showAlertNotification("Gas concentration approaching toxic levels!", "Gas Alert");
+                    }
+
                 } catch (NumberFormatException | JSONException e) {
                     e.printStackTrace();
                 }

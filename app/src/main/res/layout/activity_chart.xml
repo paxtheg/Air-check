@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/app_background"
     android:padding="16dp">
 
     <ImageButton
@@ -11,9 +12,9 @@
         android:layout_height="48dp"
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_arrow_back_white"
+        android:src="@drawable/ic_arrow_back_dark_blue"
         android:contentDescription="Back"
-        app:tint="@android:color/white" />
+        />
 
     <TextView
         android:id="@+id/chartTitle"
@@ -23,17 +24,24 @@
         android:layout_below="@id/btnBack"
         android:layout_marginTop="8dp"
         android:text="Chart Title"
-        android:textColor="@android:color/white"
+        android:textColor="#FF0F4D81"
         android:textSize="20sp"
         android:textStyle="bold" />
 
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/chartTitle"
         android:layout_marginTop="24dp"
-        />
+        android:background="@drawable/chart_background">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp" />
+
+    </FrameLayout>
 
 </RelativeLayout>
