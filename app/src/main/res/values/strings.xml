@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">Air-check</string>
+    <string name="air_quality_recommendations_text">
+    <b>Air Quality Improvement Tips:</b>\n\n
+    <b>Ventilation:</b> Open windows regularly to allow fresh air circulation\n
+    <b>Air Purifiers:</b> Use air purifiers with filters in frequently used rooms\n
+    <b>Plants:</b> Add air-purifying plants like spider plants or peace lilies\n
+    <b>Humidity Control:</b> Maintain 30-50% humidity to reduce allergens\n\n
+        <b>When Toxic Gas levels are high:</b>\n
+- <b>Evacuate the Area:</b> Move to fresh air immediately, especially if the gas is highly toxic (e.g., carbon monoxide, hydrogen sulfide, chlorine).\n
+- <b>Alert Others:</b> Warn people nearby and call emergency services (e.g., 112, 911, or local authorities).\n
+- <b>Avoid Ignition Sources:</b> Some toxic gases (e.g., methane, hydrogen) are flammable—avoid sparks or open flames.\n
+        - <b>Use Respirators or Masks:</b> Use masks with chemical cartridges (e.g., activated carbon for organic vapors, multi-gas filters).\n
+- <b> Open Windows and Doors:</b> If safe, ventilate the area to disperse the gas.\n
+        - <b> Seek Medical Help Immediately</b> if exposed (symptoms: dizziness, nausea, breathing difficulties).\n
+        - <b> For prevention</b>, you can install gas detectors and participate in trainings for gas leak scenarios in industrial or residential settings. \n\n
+
+
+        <b>When CO₂ Levels are High (>1000ppm):</b>\n
+    - <b> Increase Ventilation </b> by opening windows or using exhaust fans.\n
+- <b> Leave the Room </b> if CO₂ exceeds 1500 ppm (risk of severe symptoms).\n
+        -<b>For prevention</b>, you can install mechanical ventilation systems, limit occupancy in small spaces and add indoor plants. \n\n
+
+    <b>When PM2.5 is High (>200 µg/m³):</b>\n
+    - <b>Use Air Purifiers</b> with filters.\n
+    - <b>Reduce Indoor Sources of pullution</b> like smoking, candles or frying without ventilation. \n
+    - <b>Clean surfaces frequently</b> to reduce dust.\n\n
+
+    <b>When Humidity is High (>60%):</b>\n
+    - <b>Use a Dehumidifier</b> to keep humidity between 30–50%.\n
+        - <b>Run Air Conditioners</b>, they reduce humidity while cooling.\n
+    - <b>Fix</b> any possible water leaks.\n
+    - <b>Ventilate Moist Areas</b> such as bathrooms or kitchens with exhaust fans.\n\n
+
+    <b>When Temperature is Uncomfortable:</b>\n
+    - You should try to <b>maintain</b> a temperature of 20-22°C for optimal comfort.\n
+    - Use <b> programmable thermostats</b>. \n
+    - <b>Dress appropriately</b> for the season.
+</string>
 </resources>

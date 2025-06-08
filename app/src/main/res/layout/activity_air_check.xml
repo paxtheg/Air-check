@@ -157,6 +157,15 @@
                 android:textColor="@android:color/white"
                 android:layout_margin="4dp"
                 android:text="View Humidity Data" />
+
+            <Button
+                android:id="@+id/btnRecommendations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_recommendations"
+                android:textColor="@android:color/white"
+                android:layout_margin="4dp"
+                android:text="Air Quality Recommendations" />
         </LinearLayout>
 
 

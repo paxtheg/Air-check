@@ -54,11 +54,17 @@ public class AirCheck extends AppCompatActivity {
         Button btnPm25 = findViewById(R.id.btnPm25);
         Button btnTemp = findViewById(R.id.btnTemp);
         Button btnHumidity = findViewById(R.id.btnHumidity);
+        Button btnRecommendations = findViewById(R.id.btnRecommendations);
 
         btnCo2.setOnClickListener(v -> navigateToChart("co2"));
         btnPm25.setOnClickListener(v -> navigateToChart("pm25"));
         btnTemp.setOnClickListener(v -> navigateToChart("temp"));
         btnHumidity.setOnClickListener(v -> navigateToChart("humidity"));
+        btnRecommendations.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RecommendationsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        });
 
         createNotificationChannel();
         fetchAirQualityData();
