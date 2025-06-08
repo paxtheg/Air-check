@@ -9,7 +9,8 @@ public class CO2DataActivity extends ChartActivity {
         dataType = "co2";
         chartTitle = "CO2 Levels over the last 25 minutes";
         valueSuffix = "ppm";
-        color = Color.RED;
+        WARNING_THRESHOLD = 1000;
+        DANGER_THRESHOLD = 1500;
         super.onCreate(savedInstanceState);
     }
 }

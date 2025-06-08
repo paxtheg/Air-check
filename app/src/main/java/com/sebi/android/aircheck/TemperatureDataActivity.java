@@ -9,7 +9,8 @@ public class TemperatureDataActivity extends ChartActivity {
         dataType = "temp";
         chartTitle = "Temperature over the last 25 minutes";
         valueSuffix = "°C";
-        color = Color.GREEN;
+        WARNING_THRESHOLD = 35;
+        DANGER_THRESHOLD = 45;
         super.onCreate(savedInstanceState);
     }
 }

@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -30,6 +31,8 @@ public abstract class ChartActivity extends AppCompatActivity {
     protected String chartTitle;
     protected String valueSuffix;
     protected int color;
+    protected float WARNING_THRESHOLD = 1000;
+    protected float DANGER_THRESHOLD = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,11 @@ public abstract class ChartActivity extends AppCompatActivity {
 
         Legend legend = chart.getLegend();
         legend.setTextColor(textColor);
+        legend.setCustom(new ArrayList<LegendEntry>() {{
+            add(new LegendEntry("Safe", Legend.LegendForm.CIRCLE, 8f, 8f, null, Color.GREEN));
+            add(new LegendEntry("Warning", Legend.LegendForm.CIRCLE, 8f, 8f, null, Color.parseColor("#FFA500")));
+            add(new LegendEntry("Danger", Legend.LegendForm.CIRCLE, 8f, 8f, null, Color.RED));
+        }});
 
         Description description = chart.getDescription();
         description.setTextColor(textColor);
@@ -122,13 +130,14 @@ public abstract class ChartActivity extends AppCompatActivity {
 
         if (!entries.isEmpty()) {
             LineDataSet dataSet = new LineDataSet(entries, chartTitle);
-            dataSet.setColor(color);
+            //dataSet.setColor(color);
             dataSet.setValueTextColor(Color.WHITE);
             dataSet.setLineWidth(2f);
             dataSet.setCircleColor(color);
             dataSet.setCircleRadius(4f);
             dataSet.setValueTextSize(10f);
             dataSet.setDrawValues(false);
+
 
             dataSet.setValueFormatter(new ValueFormatter() {
                 @Override
@@ -137,9 +146,46 @@ public abstract class ChartActivity extends AppCompatActivity {
                 }
             });
 
+            applyDynamicColors(dataSet, entries);
+
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
-            chart.invalidate(); // refresh
+            chart.invalidate();
         }
+    }
+
+    private void applyDynamicColors(LineDataSet dataSet, List<Entry> entries) {
+        int[] circleColors = new int[entries.size()];
+        int[] lineColors = new int[entries.size() - 1];
+
+        for (int i = 0; i < entries.size(); i++) {
+            float value = entries.get(i).getY();
+
+
+            if (value > DANGER_THRESHOLD) {
+                circleColors[i] = Color.RED;
+            } else if (value > WARNING_THRESHOLD) {
+                circleColors[i] = Color.parseColor("#FFA500");
+            } else {
+                circleColors[i] = Color.GREEN;
+            }
+
+
+            if (i > 0) {
+                float prevValue = entries.get(i-1).getY();
+                float avgValue = (value + prevValue) / 2;
+
+                if (avgValue > DANGER_THRESHOLD) {
+                    lineColors[i-1] = Color.RED;
+                } else if (avgValue > WARNING_THRESHOLD) {
+                    lineColors[i-1] = Color.parseColor("#FFA500");
+                } else {
+                    lineColors[i-1] = Color.GREEN;
+                }
+            }
+        }
+
+        dataSet.setCircleColors(circleColors);
+        dataSet.setColors(lineColors);
     }
 }

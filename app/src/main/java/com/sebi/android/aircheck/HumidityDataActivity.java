@@ -9,7 +9,8 @@ public class HumidityDataActivity extends ChartActivity {
         dataType = "humidity";
         chartTitle = "Humidity over the last 25 minutes";
         valueSuffix = "%";
-        color = Color.MAGENTA;
+        WARNING_THRESHOLD = 60;
+        DANGER_THRESHOLD = 70;
         super.onCreate(savedInstanceState);
     }
 }

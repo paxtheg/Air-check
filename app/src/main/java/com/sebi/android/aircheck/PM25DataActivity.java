@@ -9,7 +9,8 @@ public class PM25DataActivity extends ChartActivity {
         dataType = "pm25";
         chartTitle = "PM2.5 Levels over the last 25 minutes";
         valueSuffix = "µg/m³";
-        color = Color.BLUE;
+        WARNING_THRESHOLD = 200;
+        DANGER_THRESHOLD = 300;
         super.onCreate(savedInstanceState);
     }
 }
