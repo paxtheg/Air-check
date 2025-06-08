@@ -113,7 +113,7 @@ public class AirCheck extends AppCompatActivity {
                 data.co2 = html.substring(co2Index, co2EndIndex).trim();
 
                 // Temperature
-                int tempIndex = html.indexOf("Temperature:") + 11;
+                int tempIndex = html.indexOf("Temperature:") + 13;
                 int tempEndIndex = html.indexOf("C", tempIndex);
                 data.temperature = html.substring(tempIndex, tempEndIndex).trim();
 
@@ -149,7 +149,6 @@ public class AirCheck extends AppCompatActivity {
                 dustTextView.setText("PM2.5 (Dust): " + data.dust + " µg/m³");
                 gasTextView.setText("Gas Sensor Voltage: " + data.gas);
 
-                // Check gas concentration and show notification if needed
                 try {
                     // CO2 Alert
                     String cleanCO2 = data.co2.replaceAll("[^0-9.]", "").trim();
@@ -157,7 +156,10 @@ public class AirCheck extends AppCompatActivity {
                         float co2Value = Float.parseFloat(cleanCO2);
                         DataStorageHelper.saveData(AirCheck.this, "co2", co2Value);
                         if (co2Value > 1500) {
-                            showAlertNotification("High CO2 level detected: " + (int)co2Value + "ppm", "CO2 Alert");
+                            showAlertNotification("Very high CO2 level detected: " + (int)co2Value + "ppm! Open doors and windows or use an air purifier!", "CO2 Alert");
+                        }
+                        else if (co2Value > 1000) {
+                            showAlertNotification("High CO2 level detected: " + (int)co2Value + "ppm! Open some doors or windows to prevent further CO2 pollution!", "CO2 Alert");
                         }
                     }
 
@@ -167,7 +169,10 @@ public class AirCheck extends AppCompatActivity {
                         float pm25Value = Float.parseFloat(cleanDust);
                         DataStorageHelper.saveData(AirCheck.this, "pm25", pm25Value);
                         if (pm25Value > 300) {
-                            showAlertNotification("High PM2.5 level detected: " + (int)pm25Value + "µg/m³", "Dust Alert");
+                            showAlertNotification("Very high PM2.5 level detected: " + (int)pm25Value + "µg/m³! Use an air purifier and leave the area!", "Dust Alert");
+                        }
+                        else if (pm25Value > 200) {
+                            showAlertNotification("High PM2.5 level detected: " + (int)pm25Value + "µg/m³! Use an air purifier!", "Dust Alert");
                         }
                     }
 
@@ -178,20 +183,23 @@ public class AirCheck extends AppCompatActivity {
                         DataStorageHelper.saveData(AirCheck.this, "temp", tempValue);
                     }
 
-                    // Humidity Data
+                    // Humidity Alert
                     String cleanHumidity = data.humidity.replaceAll("[^0-9.]", "").trim();
                     if (!cleanHumidity.isEmpty()) {
                         float humidityValue = Float.parseFloat(cleanHumidity);
                         DataStorageHelper.saveData(AirCheck.this, "humidity", humidityValue);
+                        if (humidityValue > 65) {
+                            showAlertNotification("High humidity levels detected: " + (int)humidityValue + "%! Use a dehumidifier or air conditioners and ventilate the area!", "Dust Alert");
+                        }
                     }
 
                     // Gas Alert
                     float gasValue = Float.parseFloat(data.gas);
                     if (gasValue > 1.5) {
-                        showAlertNotification("Gas concentration has reached a toxic level!", "Gas Alert");
+                        showAlertNotification("Gas concentration has reached a toxic level! Evacuate the area immediately and alert others!", "Gas Alert");
                     }
-                    if (gasValue > 1.3) {
-                        showAlertNotification("Gas concentration approaching toxic levels!", "Gas Alert");
+                    else if (gasValue > 1.3) {
+                        showAlertNotification("Gas concentration is approaching toxic levels! Open windows or doors and alert others!", "Gas Alert");
                     }
 
                 } catch (NumberFormatException | JSONException e) {
@@ -218,21 +226,15 @@ public class AirCheck extends AppCompatActivity {
     }
 
     private void showAlertNotification(String message, String title) {
-        // Check permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            // Only request if we haven't already asked
             if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 Toast.makeText(this, "Enable notifications for alerts", Toast.LENGTH_LONG).show();
             }
-
-            // Don't return - just skip notification this time
             return;
         }
 
-        // Create notification with unique ID
-        int notificationId = (int)System.currentTimeMillis(); // Unique ID
+        int notificationId = (int)System.currentTimeMillis();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_warning_notification)
