@@ -93,7 +93,8 @@ public class AirCheck extends AppCompatActivity {
     }
 
     private void fetchAirQualityData() {
-        new FetchDataTask().execute("http://air-check.local/");
+        //new FetchDataTask().execute("http://air-check.local/");
+        new FetchDataTask().execute("http://192.168.164.134/");
     }
 
     private class FetchDataTask extends AsyncTask<String, Void, AirQualityData> {
@@ -285,7 +286,6 @@ public class AirCheck extends AppCompatActivity {
             }
         };
 
-        // Start the auto-refresh
         refreshHandler.postDelayed(refreshRunnable, REFRESH_INTERVAL);
     }
 
